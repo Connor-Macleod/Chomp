@@ -421,7 +421,7 @@ function AddOn_Chomp.HookAddonPrefix(prefix, hookFunction)
 	end
 
 	local prefixData = Internal.Prefixes[prefix]
-	local originalCallback = prefixData.callbackl;
+	local originalCallback = prefixData.callback
 
 	prefixData.callback = function(...)
 		xpcall(originalCallback, CallErrorHandler, ...)
