@@ -411,6 +411,24 @@ function AddOn_Chomp.RegisterAddonPrefix(prefix, callback, prefixSettings)
 	end
 end
 
+function AddOn_Chomp.IsAddonPrefixRegistered(prefix)
+	return Internal.Prefixes[prefix] ~= nil
+end
+
+function AddOn_Chomp.HookAddonPrefix(prefix, hookFunction)
+	if not AddOn_Chomp.IsAddonPrefixRegistered(prefix) then
+		error("AddOn_Chomp.HookAddonPrefix(): no handler is registered with the given prefix")
+	end
+
+	local prefixData = Internal.Prefixes[prefix]
+	local originalCallback = prefixData.callbackl;
+
+	prefixData.callback = function(...)
+		xpcall(originalCallback, CallErrorHandler, ...)
+		xpcall(hookFunction, CallErrorHandler, ...)
+	end
+end
+
 local function BNGetIDGameAccount(name)
 	if not BNFeaturesEnabledAndConnected() then
 		return nil
